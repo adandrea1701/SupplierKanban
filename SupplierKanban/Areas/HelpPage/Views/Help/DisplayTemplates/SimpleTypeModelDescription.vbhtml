@@ -1,0 +1,3 @@
+@Imports SupplierKanban.Areas.HelpPage.ModelDescriptions
+@ModelType SimpleTypeModelDescription
+@Model.Documentation
