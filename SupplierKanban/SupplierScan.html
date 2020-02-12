@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Supplier Kanban Pull System</title>
+    <script src="Scripts/jquery-3.4.1.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+    <script src="Scripts/jquery-3.4.1.intellisense.js"></script>
+    
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+        #grad {
+            background-image: linear-gradient(lightblue, darkblue);
+        }
+
+        .greenLining{
+            border-bottom: #4dbe91 solid 1px;
+            width: 100%;
+            height: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body style="background-color:lightblue">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Supplier Kanban Pull Form</h4>
+                <div class="greenLining"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="part_num" class="control-label col-sm-3">Part:</label>
+                <div class="col-sm-9"><input type="text" class="form-control" id="part_num" /></div>
+            </div>
+            <div class="col-md-8">
+                <label for="part_desc" class="control-label col-sm-4">Description:</label>
+                <div class="col-sm-8"><input type="text" class="form-control" id="part_desc" disabled /></div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-4">
+                <label for="sup_num" class="control-label col-sm-5">Supplier ID:</label>
+                <div class="col-sm-7"><input type="text" class="form-control" id="sup_num" disabled /></div>
+            </div>
+            <div class="col-md-8">
+                <label for="sup_desc" class="control-label col-sm-4">Supplier Name:</label>
+                <div class="col-sm-8"><input type="text" class="form-control" id="sup_desc" disabled /></div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-4">
+                <label for="buyer" class="control-label col-sm-4">Buyer ID:</label>
+                <div class="col-sm-8"><input type="text" class="form-control" id="buyer" disabled /></div>
+            </div>
+            <div class="col-md-8">
+                <label for="buyer_name" class="control-label col-sm-4">Buyer Name:</label>
+                <div class="col-sm-8"><input type="text" class="form-control" id="buyer_name" disabled /></div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-4">
+                <label for="qty" class="control-label col-sm-4">Order Qty:</label>
+                <div class="col-sm-8"><input type="text" class="form-control" id="qty" disabled /></div>
+            </div>
+            <div class="col-md-8">
+                <label for="ship_via" class="control-label col-sm-3">Delivery:</label>
+                <div class="col-sm-9"><input type="text" class="form-control" id="ship_via" disabled /></div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-4">
+                <label for="last_date" class="control-label col-sm-4">Last Order:</label>
+                <div class="col-sm-8"><input type="text" class="form-control" id="last_date" disabled /></div>
+            </div>
+            <div class="col-md-8">
+                <label for="notes" class="control-label col-sm-4">Notes:</label>
+                <div class="col-sm-8"><input type="text" class="form-control" id="notes" multiple disabled /></div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="greenLining"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="email1" class="control-label col-sm-4">Email:</label>
+                <div class="col-sm-8"><input type="text" class="form-control" id="email1" disabled /></div>
+            </div>
+            <div class="col-md-4">
+                <label for="email2" class="control-label col-sm-4">Email:</label>
+                <div class="col-sm-8"><input type="text" class="form-control" id="email2" disabled /></div>
+            </div>
+            <div class="col-md-4">
+                <label for="email3" class="control-label col-sm-4">Email</label>
+                <div class="col-sm-8"><input type="text" class="form-control" id="email3" disabled /></div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="greenLining"></div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-1 col-md-offset-5">
+                <input type="button" class="btn-primary" id="posting" value="Send" />
+            </div>
+            <div class="col-md-1">
+                <input type="button" class="btn-primary" id="cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        function getData() {
+            var updatedata = {
+                part_num: $('#part_num').val()
+            }
+
+            $.ajax({
+                type: 'post',
+                url: 'api/SupplierKanban',
+                data: JSON.stringify(updatedata),
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (res) {
+                    $('#sup_num').val(res.supplier);
+                    $('#sup_desc').val(res.supplier_name);
+                    $('#buyer').val(res.buyer);
+                    $('#buyer_name').val(res.buyer_name);
+                    $('#part_desc').val(res.part_desc);
+                    $('#qty').val(res.ord_qty);
+                    $('#last_date').val(res.last_date);
+                    $('#ship_via').val(res.ship_via);
+                    $('#notes').val(res.notes);
+                    $('#email1').val(res.email1);
+                    $('#email2').val(res.email2);
+                    $('#email3').val(res.email3);
+                    $('#email4').val(res.email_buyer);
+                    $('#email5').val(res.email_to);
+                }
+            })
+        }
+
+        function sendEmail() {
+
+            var updatedata = {
+                part_num: $('#part_num').val()
+            }
+
+            $.ajax({
+                type: 'post',
+                url: 'api/SupplierKanbanEmail',
+                data: JSON.stringify(updatedata),
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (res) {
+                    if (res.sent == 'success') {
+                        alert('E-Mails were sent');
+                    } else {
+                        alert(res.sent);
+                    }
+                }
+            })
+        }
+
+        $(document).ready(function () {
+
+            $('#part_num').on('change', function () {
+                if ($(this).val() != '') {
+                    getData();
+                }
+            });
+
+            $("#posting").on('click', function () {
+                // Send the emails out
+                sendEmail();
+            });
+
+            $('#cancel').on('click', function () {
+                $('input[type=text]').each(function () {
+                    $(this).val('');
+                })
+            })
+        });
+
+    </script>
+</body>
+</html>
